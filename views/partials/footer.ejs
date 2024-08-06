@@ -1,0 +1,16 @@
+<footer></footer>
+<script>
+    const toggleBtn = document.querySelector(".toggle-btn");
+    const navMenuContainer = document.querySelector(".nav-menu-container");
+    const mainTag = document.getElementsByTagName("main");
+
+    function toggleNavMenu() {
+        navMenuContainer.classList.toggle("active")
+    }
+    mainTag[0].addEventListener("click", () => {
+        navMenuContainer.classList.remove("active")
+    })
+</script>
+</body>
+
+</html>
