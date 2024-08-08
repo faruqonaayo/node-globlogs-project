@@ -1,8 +1,11 @@
+const fs = require("fs");
+
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcrypt");
 
 // importing my models
 const User = require("../models/user");
+const Location = require("../models/location");
 
 module.exports.getProfile = (req, res, next) => {
   if (req.isAuthenticated()) {
@@ -87,7 +90,90 @@ module.exports.getTokenChangePassword = async (req, res, next) => {
 // adding location
 module.exports.getAddLocation = (req, res, next) => {
   if (req.isAuthenticated()) {
-    return res.status(200).render("admin-views/location", { error: null });
+    return res
+      .status(200)
+      .render("admin-views/location", { error: null, prevInput: null });
+  }
+  return res.redirect("/auth/login");
+};
+module.exports.postAddLocation = async (req, res, next) => {
+  if (req.isAuthenticated()) {
+    const userLocation = req.body.location;
+    const userCountry = req.body.country;
+    const userDescription = req.body.description;
+    const locationPicturesUrls = !req.files
+      ? null
+      : req.files.map((file) => file.path.replace("\\", "/"));
+
+    const { errors } = validationResult(req);
+    if (errors.length > 0 || req.files.length === 0) {
+      let inputErrors = errors.map((e) => e.msg);
+      if (req.files.length > 0) {
+        req.files.forEach((file) => {
+          fs.unlink(
+            path.join("./", "uploads", "locations", file.filename),
+            (err) => {
+              if (err) {
+                return next(err);
+              }
+            }
+          );
+        });
+      } else {
+        inputErrors.push("Enter a valid image file");
+      }
+      return res.status(422).render("admin-views/location", {
+        error: inputErrors,
+        prevInput: { userLocation, userCountry, userDescription },
+      });
+    }
+    try {
+      const newLocation = new Location({
+        location: userLocation,
+        country: userCountry,
+        description: userDescription,
+        locationPicturesUrls: locationPicturesUrls,
+        likes: 0,
+        date: Date.now(),
+        userId: req.user._id,
+      });
+      await newLocation.save();
+      return res.redirect("/");
+    } catch (error) {
+      next(error);
+    }
+  }
+  return res.redirect("/auth/login");
+};
+
+// liking location
+module.exports.postLikePost = async (req, res, next) => {
+  const postId = req.params.postId;
+  try {
+    const locationToEdit = await Location.findById(postId);
+    if (req.isAuthenticated()) {
+      locationToEdit.likes += 1;
+      await locationToEdit.save();
+      return res.status(200).json({ number: locationToEdit.likes });
+    }
+    return res.status(200).json({ number: locationToEdit.likes });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// getting location details
+module.exports.getLocationDetails = async (req, res, next) => {
+  if (req.isAuthenticated()) {
+    const postId = req.params.postId;
+    try {
+      const locationDetails = await Location.findById(postId);
+      return res
+        .status(200)
+        .render("admin-views/location-details", { location: locationDetails });
+    } catch (error) {
+      next(error);
+    }
   }
   return res.redirect("/auth/login");
 };

@@ -26,9 +26,11 @@ main {
 }
 
 .btn {
+  height: 32px;
   background-color: #b19470;
   border: none;
-  padding: 3px;
+  border-radius: 18px;
+  padding: 3px 8px;
   font-weight: 500;
   font-size: 1.15rem;
   color: #f8fae5;
@@ -39,5 +41,3 @@ main {
 .btn:hover {
   background-color: #76453b;
 }
-
-

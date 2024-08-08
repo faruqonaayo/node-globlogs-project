@@ -1,6 +1,76 @@
 <%- include("../partials/head.ejs") %>
-    <link rel="stylesheet" href="/styles/form.css">
+    <link rel="stylesheet" href="/styles/index.css">
     <%- include("../partials/header.ejs") %>
         <main>
+            <div class="all-posts-container">
+                <% allPosts.forEach(post=> {%>
+                    <div class="post">
+                        <div class="post-image-info">
+                            <div class="post-image">
+                                <img src="/<%= post.locationPicturesUrls[0] %>" alt="<% post.location %>">
+                            </div>
+                            <div class="post-info">
+                                <h3>
+                                    <%= post.location %>
+                                </h3>
+                                <h4>
+                                    <span class="like-count">
+                                        <%= post.likes %>
+                                    </span> Likes
+                                </h4>
+                                <h5>
+                                    Posted by <%= post.userId.firstName %>
+                                        <%= post.userId.lastName %>
+                                </h5>
+                            </div>
+                        </div>
+
+                        <div class="action-btns">
+                            <form>
+                                <input type="hidden" class="postid" name="postid" value="<%= post._id %>">
+                                <button class="btn like-btn">💖</button>
+                            </form>
+                        </div>
+                    </div>
+                    <%}); %>
+
+            </div>
         </main>
+        <script>
+            const likeButton = document.querySelectorAll(".like-btn");
+            const postId = document.querySelectorAll(".postid");
+            const likeCount = document.querySelectorAll(".like-count");
+            const postImageInfo = document.querySelectorAll(".post-image-info");
+
+
+            for (let i = 0; i < likeButton.length; i++) {
+                likeButton[i].addEventListener("click", (event) => {
+                    event.preventDefault();
+                    fetch(`/admin/like/${postId[i].value}`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded",
+                        }
+                    }).then(response => {
+                        return response.json()
+
+                    }).then(result => {
+                        if (Number(likeCount[i].innerText) === result.number) {
+                            window.location.href = "/auth/login";
+                        } else {
+                            likeCount[i].innerText = result.number;
+                        }
+                    }).catch(err => {
+                        console.log(err);
+
+                    })
+                })
+                // view post functionality
+                postImageInfo[i].addEventListener("click", () => {
+                    window.location.href = `/admin/${postId[i].value}`
+                })
+            }
+
+
+        </script>
         <%- include("../partials/footer.ejs") %>

@@ -1,0 +1,86 @@
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.all-posts-container {
+  width: 80%;
+}
+
+.all-posts-container .post {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-image: linear-gradient(45deg, #5b9e91, #85ead5);
+  border-radius: 7px;
+  margin: 30px 0px;
+  padding: 10px;
+  transition: all 0.5s ease-in-out;
+}
+
+.all-posts-container .post .post-image-info {
+  padding: 5px;
+  border-radius: 7px;
+  cursor: pointer;
+  background-color: transparent;
+  transition: all .4s ease-in-out;
+}
+
+.all-posts-container .post .post-image-info:hover {
+  background-color: #B19470;
+}
+
+.all-posts-container .post .post-image-info .post-image {
+  width: 100%;
+  border-radius: 7px;
+  margin-bottom: 8px;
+}
+
+.all-posts-container .post .post-image-info .post-image img {
+  width: 100%;
+  border-radius: 7px;
+}
+
+.all-posts-container .post .post-image-info .post-info {
+  width: 100%;
+  border-radius: 7px;
+}
+
+.all-posts-container .post .post-image-info .post-info h3 {
+  font-size: 1.4rem;
+  color: #f8fae5;
+  font-weight: bolder;
+  margin-bottom: 3px;
+}
+.all-posts-container .post .post-image-info .post-info h4 {
+  font-size: 1.1rem;
+  color: #76453b;
+  font-weight: 450;
+  margin-bottom: 3px;
+}
+.all-posts-container .post .post-image-info .post-info h5 {
+  font-size: 0.9rem;
+  color: #f8fae5;
+  font-weight: bold;
+  margin-bottom: 3px;
+}
+
+.all-posts-container .post .action-btns {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.all-posts-container .post .action-btns .btn {
+  margin: 5px;
+}
+
+@media (min-width: 768px) {
+  .all-posts-container {
+    width: 40%;
+  }
+}

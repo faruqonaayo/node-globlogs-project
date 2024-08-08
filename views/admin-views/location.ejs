@@ -13,19 +13,21 @@
                         <form action="/admin/add" method="post" enctype="multipart/form-data">
                             <div class="label-input">
                                 <label for="location">Location:</label>
-                                <input type="text" name="location" value="">
+                                <input type="text" name="location"
+                                    value="<%= prevInput ? prevInput.userLocation: "" %>">
                             </div>
                             <div class="label-input">
                                 <label for="country">Country</label>
-                                <input type="text" name="country" value="">
+                                <input type="text" name="country" value="<%= prevInput ? prevInput.userCountry: "" %>">
                             </div>
                             <div class="label-input">
                                 <label for="description">Description:</label>
-                                <textarea name="description" id=""></textarea>
+                                <textarea name="description"><%= prevInput ? prevInput.userDescription: "" %></textarea>
                             </div>
                             <div class="label-input">
-                                <label for="profilepic">Profile Picture:</label>
-                                <input type="file" name="profilepic" multiple accept="image/png, image/jpg, image/jpeg">
+                                <label for="locationpics">Location Pictures (max 3):</label>
+                                <input type="file" name="locationpics" multiple
+                                    accept="image/png, image/jpg, image/jpeg">
                             </div>
                             <button type="submit" class="btn">Post</button>
                         </form>
