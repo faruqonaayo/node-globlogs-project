@@ -1,42 +1,43 @@
 <%- include("../partials/head.ejs") %>
-<link rel="stylesheet" href="/styles/form.css">
-<%- include("../partials/header.ejs") %>
-<main>
-    <div class="form-container">
-        <% if (error) { %>
-            <div class="error-message">
-                <p>
-                    <%= error[0] %>
-                </p>
+    <link rel="stylesheet" href="/styles/form.css">
+    <%- include("../partials/header.ejs") %>
+        <main>
+            <div class="form-container">
+                <% if (error) { %>
+                    <div class="error-message">
+                        <p>
+                            <%= error[0] %>
+                        </p>
+                    </div>
+                    <% } %>
+                        <form action="/auth/signup" method="post" enctype="multipart/form-data">
+                            <div class="label-input">
+                                <label for="fname">First Name:</label>
+                                <input type="text" name="fname" value="<%= prevInput ? prevInput.userFirstName: "" %>">
+                            </div>
+                            <div class="label-input">
+                                <label for="lname">Last Name:</label>
+                                <input type="text" name="lname" value="<%= prevInput ? prevInput.userLastName: "" %>">
+                            </div>
+                            <div class="label-input">
+                                <label for="useremail">Email:</label>
+                                <input type="email" name="useremail" value="<%= prevInput ? prevInput.userEmail: "" %>">
+                            </div>
+                            <div class="label-input">
+                                <label for="profilepic">Profile Picture:</label>
+                                <input type="file" name="profilepic" accept="image/png, image/jpg, image/jpeg">
+                            </div>
+                            <div class="label-input">
+                                <label for="pw">Password:</label>
+                                <input type="text" name="pw">
+                            </div>
+                            <div class="label-input">
+                                <label for="confirmpw">Confirm Password:</label>
+                                <input type="text" name="confirmpw">
+                            </div>
+                            <button type="submit" class="btn">Sign Up</button>
+                        </form>
+                        <a href="/auth/login">Log In</a>
             </div>
-            <% } %>
-                <form action="/auth/signup" method="post" enctype="multipart/form-data">
-                    <div class="label-input">
-                        <label for="fname">First Name:</label>
-                        <input type="text" name="fname" value="<%= prevInput ? prevInput.userFirstName: "" %>">
-                    </div>
-                    <div class="label-input">
-                        <label for="lname">Last Name:</label>
-                        <input type="text" name="lname" value="<%= prevInput ? prevInput.userLastName: "" %>">
-                    </div>
-                    <div class="label-input">
-                        <label for="useremail">Email:</label>
-                        <input type="email" name="useremail" value="<%= prevInput ? prevInput.userEmail: "" %>">
-                    </div>
-                    <div class="label-input">
-                        <label for="profilepic">Profile Picture:</label>
-                        <input type="file" name="profilepic" accept="image/png, image/jpg, image/jpeg">
-                    </div>
-                    <div class="label-input">
-                        <label for="pw">Password:</label>
-                        <input type="text" name="pw">
-                    </div>
-                    <div class="label-input">
-                        <label for="confirmpw">Confirm Password:</label>
-                        <input type="text" name="confirmpw">
-                    </div>
-                    <button type="submit" class="btn">Sign Up</button>
-                </form>
-    </div>
-</main>
-<%- include("../partials/footer.ejs") %>
+        </main>
+        <%- include("../partials/footer.ejs") %>

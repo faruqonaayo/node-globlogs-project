@@ -1,0 +1,28 @@
+<%- include("../partials/head.ejs") %>
+    <link rel="stylesheet" href="/styles/form.css">
+    <%- include("../partials/header.ejs") %>
+        <main>
+            <div class="form-container">
+                <% if (error) { %>
+                    <div class="error-message">
+                        <p>
+                            <%= error[0] %>
+                        </p>
+                    </div>
+                    <% } %>
+                        <form action="/auth/login" method="post">
+                            <div class="label-input">
+                                <label for="username">Email:</label>
+                                <input type="email" name="username" value="<%= prevInput ? prevInput.userEmail: "" %>">
+                            </div>
+                            <div class="label-input">
+                                <label for="password">Password:</label>
+                                <input type="text" name="password">
+                            </div>
+                            <button type="submit" class="btn">Log In</button>
+                        </form>
+                        <a href="/auth/signup">Sign Up</a>
+                        <a href="/auth/forgot">Forgot Password</a>
+            </div>
+        </main>
+        <%- include("../partials/footer.ejs") %>

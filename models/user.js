@@ -8,6 +8,8 @@ const userSchema = new Schema({
   email: { type: String, required: true },
   profilePictureUrl: { type: String, required: true },
   password: { type: String, required: true },
+  token: { type: String },
+  tokenExp: { type: Date },
 });
 
 module.exports = mongoose.model("User", userSchema);

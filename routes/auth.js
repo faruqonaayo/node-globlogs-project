@@ -3,6 +3,7 @@ const path = require("path");
 const express = require("express");
 const multer = require("multer");
 const { body } = require("express-validator");
+const passport = require("passport");
 
 const authController = require("../controllers/auth");
 const { fileStorage, fileFilter } = require("../util/multerConfig");
@@ -12,12 +13,13 @@ const User = require("../models/user");
 
 const router = express.Router();
 
+// router using 3rd party middlewares
 const upload = multer({
   storage: fileStorage(path.join("./", "uploads", "profiles")),
   fileFilter: fileFilter,
 });
 
-const validationArray = [
+const signUpValidationArray = [
   body(
     "fname",
     "First name has to be alphabets only with a mininum length of 2"
@@ -50,14 +52,31 @@ const validationArray = [
   }),
 ];
 
-// router using 3rd party middlewares
-
 router.get("/signup", authController.getSignUp);
 router.post(
   "/signup",
   upload.single("profilepic"),
-  validationArray,
+  signUpValidationArray,
   authController.postSignUp
 );
+
+// login
+const logInValidationArray = [
+  body("useremail", "Enter a valid email").trim().isEmail(),
+];
+
+router.get("/login", authController.getLogIn);
+router.post(
+  "/login",
+  passport.authenticate("local", {
+    successRedirect: "/",
+    failureRedirect: "/auth/login",
+  })
+);
+
+// forgot password
+router.get("/forgot", authController.getForgotPassword);
+router.post("/forgot", authController.postForgotPassword);
+
 
 module.exports = router;

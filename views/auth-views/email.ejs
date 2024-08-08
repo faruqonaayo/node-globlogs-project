@@ -1,0 +1,17 @@
+<%- include("../partials/head.ejs") %>
+    <link rel="stylesheet" href="/styles/form.css">
+    <%- include("../partials/header.ejs") %>
+        <main>
+            <div class="form-container">
+                <form action="/auth/forgot" method="post">
+                    <div class="label-input">
+                        <label for="useremail">Email:</label>
+                        <input type="email" name="useremail">
+                    </div>
+                    <button type="submit" class="btn">Change Password</button>
+                </form>
+                <a href="/auth/login">Log In</a>
+                <a href="/auth/signup">Sign Up</a>
+            </div>
+        </main>
+        <%- include("../partials/footer.ejs") %>

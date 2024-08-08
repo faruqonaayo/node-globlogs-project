@@ -1,0 +1,33 @@
+.profile-container {
+  width: 100%;
+  height: 85vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.profile-container .profile-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.profile-container .profile-image img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.profile-container .profile-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-container .profile-info label {
+  font-weight: bold;
+}
+
+.profile-container .profile-info label span {
+  font-weight: normal;
+}

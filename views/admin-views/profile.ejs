@@ -1,0 +1,31 @@
+<%- include("../partials/head.ejs") %>
+    <link rel="stylesheet" href="/styles/profile.css">
+    <%- include("../partials/header.ejs") %>
+        <main>
+            <div class="profile-container">
+                <div class="profile-image">
+                    <img src="/<%= user.profilePictureUrl %>" alt="<%= user.firstName %>">
+                </div>
+                <div class="profile-info">
+                    <label>First Name:
+                        <span>
+                            <%= user.firstName %>
+                        </span>
+                    </label>
+                    <label>Last Name:
+                        <span>
+                            <%= user.lastName %>
+                        </span>
+                    </label>
+                    <label>Email:
+                        <span>
+                            <%= user.email %>
+                        </span>
+                    </label>
+                </div>
+                <div class="change-password">
+                    <a href="/admin/change/password">Change Password</a>
+                </div>
+            </div>
+        </main>
+        <%- include("../partials/footer.ejs") %>

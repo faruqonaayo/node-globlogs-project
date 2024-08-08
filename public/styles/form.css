@@ -33,7 +33,18 @@ main form .label-input label {
 main form .label-input input {
   width: 100%;
   border: none;
-  padding: 4px 10px;
+  padding: 6px 8px;
+  border-radius: 15px;
+  font-size: 1.02rem;
+  margin-bottom: 7px;
+  background-color: #f8fae5;
+}
+
+main form .label-input textarea {
+  width: 100%;
+  height: 100px;
+  border: none;
+  padding: 6px 8px;
   border-radius: 15px;
   font-size: 1.02rem;
   margin-bottom: 7px;

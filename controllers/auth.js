@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const crypto = require("crypto");
 
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcrypt");
@@ -56,7 +57,7 @@ module.exports.postSignUp = async (req, res, next) => {
 
     return res.status(422).render("auth-views/signup", {
       error: inputErrors,
-      prevInput: { userFirstName, userLastName, userEmail, userPassword },
+      prevInput: { userFirstName, userLastName, userEmail },
     });
   }
 
@@ -88,8 +89,51 @@ module.exports.postSignUp = async (req, res, next) => {
           }
         }
       );
-      res.status(200).send("created");
+      res.redirect("/auth/login");
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// login handlers
+module.exports.getLogIn = (req, res, next) => {
+  res.status(200).render("auth-views/login", { error: null, prevInput: null });
+};
+
+module.exports.getForgotPassword = async (req, res, next) => {
+  res.status(200).render("auth-views/email");
+};
+
+module.exports.postForgotPassword = async (req, res, next) => {
+  const userEmail = req.body.useremail;
+  try {
+    const findUser = await User.findOne({ email: userEmail });
+    if (findUser) {
+      const generatedToken = crypto.randomBytes(16).toString("hex");
+      findUser.token = generatedToken;
+      findUser.tokenExp = Date.now() + 1000 * 60 * 60;
+      await findUser.save();
+      transporter.sendMail(
+        {
+          from: "mailtrap@devfaruqayo.com",
+          to: userEmail,
+          subject: "Change Password",
+          html: `<a href='http://localhost:3000/admin/change/password/${generatedToken}'>Change Password</a>`,
+        },
+        (err) => {
+          if (err) {
+            console.log(err);
+            return;
+          }
+        }
+      );
+    }
+    res
+      .status(200)
+      .send(
+        `<p>Change password through the link sent to your email</p> <a href='http://localhost:3000/auth/login>Change Password</a>`
+      );
   } catch (error) {
     next(error);
   }
