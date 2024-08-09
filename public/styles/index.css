@@ -23,7 +23,7 @@ main {
 }
 
 .all-posts-container .post .post-image-info {
-  padding: 5px;
+  padding: 15px 10px;
   border-radius: 7px;
   cursor: pointer;
   background-color: transparent;

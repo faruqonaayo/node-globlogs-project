@@ -23,7 +23,11 @@ const transporter = nodemailer.createTransport(
 
 // signup handlers
 module.exports.getSignUp = (req, res, next) => {
-  res.status(200).render("auth-views/signup", { error: null, prevInput: null });
+  res.status(200).render("auth-views/signup", {
+    error: null,
+    prevInput: null,
+    isAuthenticated: req.isAuthenticated(),
+  });
 };
 
 module.exports.postSignUp = async (req, res, next) => {
@@ -57,7 +61,12 @@ module.exports.postSignUp = async (req, res, next) => {
 
     return res.status(422).render("auth-views/signup", {
       error: inputErrors,
-      prevInput: { userFirstName, userLastName, userEmail },
+      prevInput: {
+        userFirstName,
+        userLastName,
+        userEmail,
+      },
+      isAuthenticated: req.isAuthenticated(),
     });
   }
 
@@ -98,11 +107,19 @@ module.exports.postSignUp = async (req, res, next) => {
 
 // login handlers
 module.exports.getLogIn = (req, res, next) => {
-  res.status(200).render("auth-views/login", { error: null, prevInput: null });
+  res
+    .status(200)
+    .render("auth-views/login", {
+      error: null,
+      prevInput: null,
+      isAuthenticated: req.isAuthenticated(),
+    });
 };
 
 module.exports.getForgotPassword = async (req, res, next) => {
-  res.status(200).render("auth-views/email");
+  res
+    .status(200)
+    .render("auth-views/email", { isAuthenticated: req.isAuthenticated() });
 };
 
 module.exports.postForgotPassword = async (req, res, next) => {

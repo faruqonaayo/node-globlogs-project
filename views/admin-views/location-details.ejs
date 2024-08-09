@@ -1,8 +1,71 @@
 <%- include("../partials/head.ejs") %>
+    <link rel="stylesheet" href="/styles/location-details.css">
     <%- include("../partials/header.ejs") %>
         <main>
-            <div class="location-details-container">
-                <h1>details</h1>
+            <div class="post">
+                <div class="post-image">
+                    <% post.locationPicturesUrls.forEach(url=> {%>
+                        <img src="/<%= url %>" alt="<% post.location %>" width="200px">
+                        <% }); %>
+                </div>
+                <div class="post-info">
+                    <h3>
+                        <%= post.location %>
+                    </h3>
+                    <p>
+                        <%= post.description %>
+                    </p>
+                    <h4>
+                        <span class="like-count">
+                            <%= post.likes %>
+                        </span> Likes
+                    </h4>
+                    <h5>
+                        Posted by <%= post.userId.firstName %>
+                            <%= post.userId.lastName %>
+                    </h5>
+                </div>
+
+                <div class="action-btns">
+                    <form>
+                        <input type="hidden" class="postid" name="postid" value="<%= post._id %>">
+                        <button class="btn like-btn">💖</button>
+                    </form>
+                </div>
             </div>
+
         </main>
+        <script>
+            const likeButton = document.querySelectorAll(".like-btn");
+            const postId = document.querySelectorAll(".postid");
+            const likeCount = document.querySelectorAll(".like-count");
+            const postImageInfo = document.querySelectorAll(".post-image-info");
+
+
+            for (let i = 0; i < likeButton.length; i++) {
+                likeButton[i].addEventListener("click", (event) => {
+                    event.preventDefault();
+                    fetch(`/admin/like/${postId[i].value}`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded",
+                        }
+                    }).then(response => {
+                        return response.json()
+
+                    }).then(result => {
+                        if (Number(likeCount[i].innerText) === result.number) {
+                            window.location.href = "/auth/login";
+                        } else {
+                            likeCount[i].innerText = result.number;
+                        }
+                    }).catch(err => {
+                        console.log(err);
+
+                    })
+                })
+            }
+
+
+        </script>
         <%- include("../partials/footer.ejs") %>

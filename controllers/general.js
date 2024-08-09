@@ -8,6 +8,7 @@ module.exports.getIndex = async (req, res, next) => {
       .populate("userId");
     return res.status(200).render("general-views/index", {
       allPosts: allPosts,
+      isAuthenticated: req.isAuthenticated(),
     });
   } catch (error) {
     next(error);

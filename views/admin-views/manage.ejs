@@ -1,0 +1,30 @@
+<%- include("../partials/head.ejs") %>
+    <link rel="stylesheet" href="/styles/manage.css">
+    <%- include("../partials/header.ejs") %>
+        <main>
+            <div class="all-user-posts-container">
+                <% allPosts.forEach(post=> {%>
+                    <div class="post">
+                        <div class="post-image-info">
+                            <div class="post-info">
+                                <h3>
+                                    <%= post.location %>
+                                </h3>
+                                <h4>
+                                    <%= post.date.toString() %>
+                                </h4>
+                            </div>
+                        </div>
+
+                        <div class="action-btns">
+                            <form action="/admin/delete"  method="post">
+                                <input type="hidden" class="postid" name="postid" value="<%= post._id %>">
+                                <button class="btn delete-btn">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                    <%}); %>
+
+            </div>
+        </main>
+        <%- include("../partials/footer.ejs") %>

@@ -74,9 +74,15 @@ router.post(
 );
 
 // like
-router.post("/like/:postId", adminController.postLikePost);
+router.post("/like/:postId", adminController.postLikeLocation);
 
 // view
-router.get("/:postId", adminController.getLocationDetails);
+router.get("/view/:postId", adminController.getLocationDetails);
+
+// manage
+router.get("/manage", adminController.getManageLocations);
+
+// delete
+router.post("/delete", adminController.deleteLocation)
 
 module.exports = router;

@@ -1,4 +1,5 @@
 const fs = require("fs");
+const path = require("path");
 
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcrypt");
@@ -9,7 +10,10 @@ const Location = require("../models/location");
 
 module.exports.getProfile = (req, res, next) => {
   if (req.isAuthenticated()) {
-    return res.status(200).render("admin-views/profile", { user: req.user });
+    return res.status(200).render("admin-views/profile", {
+      user: req.user,
+      isAuthenticated: req.isAuthenticated(),
+    });
   }
   res.redirect("/auth/login");
 };
@@ -21,6 +25,7 @@ module.exports.getChangePassword = (req, res, next) => {
       user: req.user,
       error: null,
       prevInput: null,
+      isAuthenticated: req.isAuthenticated(),
     });
   }
   return res.redirect("/auth/login");
@@ -37,6 +42,7 @@ module.exports.postChangePassword = async (req, res, next) => {
     return res.status(422).render("admin-views/password-change", {
       error: inputErrors,
       prevInput: { userEmail },
+      isAuthenticated: req.isAuthenticated(),
     });
   }
   bcrypt.hash(userPassword, 12, async (err, hashedPassword) => {
@@ -79,6 +85,7 @@ module.exports.getTokenChangePassword = async (req, res, next) => {
         user: userToChange,
         error: null,
         prevInput: null,
+        isAuthenticated: req.isAuthenticated(),
       });
     }
     return res.redirect("/auth/login");
@@ -90,9 +97,11 @@ module.exports.getTokenChangePassword = async (req, res, next) => {
 // adding location
 module.exports.getAddLocation = (req, res, next) => {
   if (req.isAuthenticated()) {
-    return res
-      .status(200)
-      .render("admin-views/location", { error: null, prevInput: null });
+    return res.status(200).render("admin-views/location", {
+      error: null,
+      prevInput: null,
+      isAuthenticated: req.isAuthenticated(),
+    });
   }
   return res.redirect("/auth/login");
 };
@@ -125,6 +134,7 @@ module.exports.postAddLocation = async (req, res, next) => {
       return res.status(422).render("admin-views/location", {
         error: inputErrors,
         prevInput: { userLocation, userCountry, userDescription },
+        isAuthenticated: req.isAuthenticated(),
       });
     }
     try {
@@ -147,7 +157,7 @@ module.exports.postAddLocation = async (req, res, next) => {
 };
 
 // liking location
-module.exports.postLikePost = async (req, res, next) => {
+module.exports.postLikeLocation = async (req, res, next) => {
   const postId = req.params.postId;
   try {
     const locationToEdit = await Location.findById(postId);
@@ -167,10 +177,48 @@ module.exports.getLocationDetails = async (req, res, next) => {
   if (req.isAuthenticated()) {
     const postId = req.params.postId;
     try {
-      const locationDetails = await Location.findById(postId);
-      return res
-        .status(200)
-        .render("admin-views/location-details", { location: locationDetails });
+      const locationDetails = await Location.findById(postId).populate(
+        "userId"
+      );
+      return res.status(200).render("admin-views/location-details", {
+        post: locationDetails,
+        isAuthenticated: req.isAuthenticated(),
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+  return res.redirect("/auth/login");
+};
+
+// managing admin posts
+module.exports.getManageLocations = async (req, res, next) => {
+  if (req.isAuthenticated()) {
+    const allUserPosts = await Location.find({ userId: req.user._id });
+    return res.status(200).render("admin-views/manage", {
+      allPosts: allUserPosts,
+      isAuthenticated: req.isAuthenticated(),
+    });
+  }
+  return res.redirect("/auth/login");
+};
+
+// deleting a location
+module.exports.deleteLocation = async (req, res, next) => {
+  if (req.isAuthenticated()) {
+    const postId = req.body.postid;
+    try {
+      const locationToDelete = await Location.findById(postId);
+
+      locationToDelete.locationPicturesUrls.forEach((url) => {
+        fs.unlink(path.join("./", url), async (err) => {
+          if (err) {
+            next(err);
+          }
+          await Location.deleteOne({ _id: postId, userId: req.user._id });
+        });
+      });
+      return res.status(200).redirect("/admin/manage");
     } catch (error) {
       next(error);
     }
