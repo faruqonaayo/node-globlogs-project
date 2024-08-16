@@ -14,7 +14,7 @@ dotenv;
 // importing my models
 const User = require("../models/user");
 
-const TOKEN = process.env.MAILTRAP_TOKEN;
+const TOKEN = "45e5600500c65c3d4c522c0d7f920723";
 const transporter = nodemailer.createTransport(
   MailtrapTransport({
     token: TOKEN,

@@ -28,7 +28,8 @@ const adminRoutes = require("./routes/admin");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const DBURI = process.env.DB_URI;
+const DBURI =
+  "mongodb+srv://faruq:64DYLRAyX9RpmVTA@cluster0.yse2dvd.mongodb.net/";
 
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -60,7 +61,7 @@ const store = new MongoDBStore(
 
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
+    secret: "my secret",
     resave: false,
     saveUninitialized: true,
     store: store,
