@@ -1,6 +1,4 @@
 const path = require("path");
-const fs = require("fs");
-const https = require("https");
 
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -10,9 +8,6 @@ const MongoDBStore = require("connect-mongodb-session")(session);
 const passport = require("passport");
 const { Strategy } = require("passport-local");
 const bcrypt = require("bcrypt");
-const helmet = require("helmet");
-const compression = require("compression");
-const morgan = require("morgan");
 
 // my modules
 const dotenv = require("./dotenv");
@@ -27,22 +22,13 @@ const generalRoutes = require("./routes/general");
 const adminRoutes = require("./routes/admin");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-const DBURI =
-  "mongodb+srv://faruq:64DYLRAyX9RpmVTA@cluster0.yse2dvd.mongodb.net/";
+const PORT = 3000;
+const DBURI = process.env.DB_URI;
 
 app.set("view engine", "ejs");
 app.set("views", "views");
 
 // app using 3rd party middlewares
-const accessLogStream = fs.createWriteStream(
-  path.join(__dirname, "access.log"),
-  { flags: "a" }
-);
-
-app.use(helmet());
-app.use(compression());
-app.use(morgan("combined", { stream: accessLogStream }));
 const store = new MongoDBStore(
   {
     uri: DBURI,
@@ -55,17 +41,12 @@ const store = new MongoDBStore(
     }
   }
 );
-
-// const privateKey = fs.readFileSync("server.key");
-// const certificate = fs.readFileSync("server.cert");
-
 app.use(
   session({
-    secret: "my secret",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
     store: store,
-    cookie: { maxAge: 1000 * 60 },
   })
 );
 app.use(passport.session());
