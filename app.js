@@ -1,4 +1,5 @@
 const path = require("path");
+const fs = require("fs");
 
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -8,6 +9,7 @@ const MongoDBStore = require("connect-mongodb-session")(session);
 const passport = require("passport");
 const { Strategy } = require("passport-local");
 const bcrypt = require("bcrypt");
+const morgan = require("morgan");
 
 // my modules
 const dotenv = require("./dotenv");
@@ -29,6 +31,11 @@ app.set("view engine", "ejs");
 app.set("views", "views");
 
 // app using 3rd party middlewares
+const accessLogStream = fs.createWriteStream(
+  path.join(__dirname, "access.log"),
+  { flags: "a" }
+);
+app.use(morgan("combined", { stream: accessLogStream }));
 const store = new MongoDBStore(
   {
     uri: DBURI,
@@ -47,6 +54,7 @@ app.use(
     resave: false,
     saveUninitialized: true,
     store: store,
+    cookie: { maxAge: 1000 * 60 * 5 },
   })
 );
 app.use(passport.session());
